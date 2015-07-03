@@ -1,0 +1,44 @@
+require 'spec_helper'
+
+module Gramz::LFG
+  describe Grammar do
+    include LFG::DSL
+
+    let :my_grammar do
+      grammar :S do
+        rule :S do
+          node(:SN) { up :SUJ, down }
+          node(:V)  { up down }
+        end
+
+        rule :SN do
+          node "Jean" do
+            up :NUM,  :sing
+            up :MODE, :indicatif
+            up :PERS,  3
+            up :PRED, 'dormir<SUJ>'
+          end
+        end
+
+        rule :V do
+          node "dort" do
+            up :NUM,   :sing
+            up :GENRE, :masc
+            up :PRED,  'Jean'
+          end
+        end
+      end
+    end
+
+
+    describe "#rules_for" do
+      it "should return the list of rules for the given symbol" do
+        rule = my_grammar.rules.last
+        symbol = Symbol::NonTerminal.new(:V)
+
+        expect(my_grammar.rules_for(symbol)).to eq [rule]
+      end
+    end
+  end
+
+end

@@ -1,0 +1,95 @@
+require 'spec_helper'
+
+module Gramz::LFG
+  describe DSL do
+    include LFG::DSL
+
+    let :my_grammar do
+      grammar :S do
+        rule :S do
+          node(:SN) { up :SUJ, down }
+          node(:V)  { up down }
+        end
+
+        rule :SN do
+          node "Jean" do
+            up :NUM,  :sing
+            up :MODE, :indicatif
+            up :PERS,  3
+            up :PRED, 'dormir<SUJ>'
+          end
+        end
+
+        rule :V do
+          node "dort" do
+            up :NUM,   :sing
+            up :GENRE, :masc
+            up :PRED,  'Jean'
+          end
+        end
+      end
+    end
+
+    describe "#grammar" do
+      it "should return a new Grammar object" do
+        expect(my_grammar).to be_kind_of(Grammar)
+      end
+
+      it "should set its initial symbol to S" do
+        expect(my_grammar.initial_symbol).to be_kind_of Symbol::NonTerminal
+        expect(my_grammar.initial_symbol.to_sym).to be :S
+      end
+
+      it "should populate it with three Rules" do
+        rules = my_grammar.rules
+        expect(rules.size).to be 3
+        expect(rules.first).to be_kind_of(Rule)
+      end
+    end
+
+    describe "#rule" do
+      let(:rule) { my_grammar.rules.first }
+
+      it "should return a new Rule object" do
+        expect(rule).to be_kind_of Rule
+      end
+
+      it "should set its left hand side symbol" do
+        expect(rule.symbol).to be_kind_of Symbol::NonTerminal
+        expect(rule.symbol.to_sym).to eq :S
+      end
+
+      it "should populate its right hand side with a list of Nodes" do
+        nodes = rule.nodes.map { |n| n.symbol.to_sym }
+        expect(nodes).to eq [:SN, :V]
+      end
+    end
+
+    describe "#node" do
+      let(:node) { my_grammar.rules.first.nodes.first }
+
+      it "should return a new Node object" do
+        expect(node).to be_kind_of Node
+      end
+
+      it "should set its symbol" do
+        expect(node.symbol.to_sym).to eq :SN
+      end
+
+      context "when Symbol given" do
+        it "should create a non terminal symbol" do
+          expect(node.symbol).not_to be_terminal
+        end
+      end
+
+      context "when String given" do
+        let(:node) { my_grammar.rules.last.nodes.first }
+
+        it "should create a terminal symbol" do
+          expect(node.symbol).to be_terminal
+        end
+      end
+    end
+  end
+
+end
