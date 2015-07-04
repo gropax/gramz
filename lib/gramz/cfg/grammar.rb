@@ -1,3 +1,7 @@
+require_relative 'grammar/dsl'
+require_relative 'grammar/formater'
+require_relative 'grammar/processor'
+
 module Gramz
   module CFG
     class Grammar
@@ -16,11 +20,11 @@ module Gramz
         @rules.fetch(symbol, [])
       end
 
-      def non_terminal_symbols
+      def non_terms
         symbols.select(&:non_terminal?)
       end
 
-      def terminal_symbols
+      def terms
         symbols.select(&:terminal?)
       end
 
@@ -31,28 +35,28 @@ module Gramz
         end
       end
 
-      def inspect
-        indent = ' ' * 2
-        rules = @rules.values.flatten
-        lh_width = rules.map { |r| r.left_symbol.to_s.length }.max
-
-        "Grammar\n" +
-        "  Non Terminal: #{non_terminal_symbols.join(' ')}\n" +
-        "  Terminal: #{terminal_symbols.join(' ')}\n" +
-        "  Initial: #{@initial_symbol}\n" +
-        "  Rules:\n" + rules.map { |r| indent*2 + r.inspect(lh_width) }.join("\n")
+      def ==(other)
+        Set.new(self.rules) == Set.new(other.rules)
       end
 
-      #def accepts?(str)
-      #  Parser.new(self, str).parse
-      #end
+      # Return a copy of self. Duplicate the `@rules` variable in order to
+      # modify grammars' rules independently.
+      #
+      def dup
+        self.class.new(@initial_symbol, self.rules)
+      end
 
-      #def initial_rule
-      #  Rule.new(
-      #    Symbol::NonTerminal.new(:"0"),
-      #    [Node.new(@initial_symbol)]
-      #  )
-      #end
+      def format(formater = Formater)
+        formater.new(self).format
+      end
+
+      def inspect
+        format
+      end
+
+      def rules_hash
+        @rules
+      end
     end
   end
 end

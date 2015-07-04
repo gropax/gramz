@@ -1,11 +1,10 @@
-require "gramz/lfg/version"
-require "gramz/lfg/false_structure"
-require "gramz/lfg/trait"
-require "gramz/lfg/atomic_value"
-require "gramz/lfg/trait_structure"
-require "gramz/lfg/unification"
-require "gramz/lfg/grammar"
-require "gramz/lfg/dsl"
+require_relative "lfg/false_structure"
+require_relative "lfg/trait"
+require_relative "lfg/atomic_value"
+require_relative "lfg/trait_structure"
+require_relative "lfg/unification"
+require_relative "lfg/grammar"
+require_relative "lfg/dsl"
 
 module Gramz
   module LFG

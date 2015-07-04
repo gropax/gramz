@@ -21,5 +21,22 @@ module Gramz::CFG
         expect(terminal == other).to be false
       end
     end
+
+    describe "#hash" do
+      it "should be the same if symbol and type are identical" do
+        other = Symbol::Terminal.new :T
+        expect(terminal.hash).to eq other.hash
+      end
+
+      it "should be different if symbols are different" do
+        other = Symbol::Terminal.new :A
+        expect(terminal.hash).not_to eq other.hash
+      end
+
+      it "should be different if class are different" do
+        other = Symbol::NonTerminal.new :T
+        expect(terminal.hash).not_to eq other.hash
+      end
+    end
   end
 end

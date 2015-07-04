@@ -13,7 +13,7 @@ module Gramz
         alias_method :==, :eql?
 
         def hash
-          @symbol.hash
+          [@symbol, terminal?].hash
         end
 
         def to_sym

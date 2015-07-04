@@ -17,6 +17,20 @@ module Gramz
         @right_symbols = right_symbols
       end
 
+      def symbols
+        [@left_symbol, *@right_symbols]
+      end
+
+      def ==(other)
+        @left_symbol == other.left_symbol &&
+          @right_symbols == other.right_symbols
+      end
+      alias_method :eql?, :==
+
+      def hash
+        [@left_symbol, @right_symbols].hash
+      end
+
       def check_left_symbol_is_non_terminal!(symbol)
         if symbol.terminal?
           raise RuleError, "Left hand side symbol should be non-terminal."
