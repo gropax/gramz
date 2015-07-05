@@ -5,7 +5,7 @@ module Gramz
   module CFG
     class ParseTree
       def self.builder(root_val, nodes = nil)
-        root = Node.new(root_val)
+        root = Node.new Symbol::NonTerminal.new root_val
         build_nodes(nodes).each { |n| root.add_child n }
         ParseTree.new(root)
       end
@@ -14,16 +14,16 @@ module Gramz
         case param
         when Hash
           param.map { |k, v|
-            node = Node.new k
+            node = Node.new Symbol::NonTerminal.new k
             build_nodes(v).each { |n| node.add_child n }
             node
           }
         when Array
-          param.map { |x| Node.new x }
+          param.map { |x| Node.new Symbol::Terminal.new x }
         when nil
           []
         else
-          [Node.new(param)]
+          [Node.new(Symbol::Terminal.new param)]
         end
       end
 
@@ -31,6 +31,10 @@ module Gramz
       attr_reader :root
       def initialize(root)
         @root = root
+      end
+
+      def ==(other)
+        @root == other.root
       end
 
       def format(formater = Formater.new(self))
@@ -51,7 +55,7 @@ module Gramz
       end
 
       def inspect
-        format_debug
+        "\n" + format
       end
 
     end

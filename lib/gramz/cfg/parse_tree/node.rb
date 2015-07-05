@@ -24,6 +24,10 @@ module Gramz
           !terminal?
         end
 
+        def ==(other)
+          @value == other.value && @children == other.children
+        end
+
         def format(formater = Formater.new(self))
           formater.format
         end

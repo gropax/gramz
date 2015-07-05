@@ -1,37 +1,61 @@
 require 'spec_helper'
 
 module Gramz
-  module CFG::Earley
-    describe Parser do
+  module CFG
+    describe Earley::Parser do
       include CFG::DSL
 
       let(:my_grammar) {
         grammar :S do
           rule :S  => [:NP, :VP]
-          rule :NP => ['art', 'adj', 'n']
-          rule :NP => ['art', 'n']
-          rule :NP => ['adj', 'n']
-          rule :VP => ['aux', :VP]
-          rule :VP => ['v', :NP]
+          rule :NP => [:D, :N]
+          rule :D  => 'Le'
+          rule :D  => 'une'
+          rule :N  => 'chat'
+          rule :N  => 'souris'
+          rule :VP => [:V, :NP]
+          rule :V  => 'mange'
         end
       }
 
-      let(:parser) { Parser.new(my_grammar) }
+      let(:parser) { Earley::Parser.new(my_grammar) }
 
-      describe "#accepts?" do
-        it "should return true if input accepted by grammar" do
-          s = "art adj n aux v art n"
-          expect(parser.accepts? s).to be true
+      describe "#parse" do
+        it "should return a ParseResult object" do
+          expect(parser.parse "whatever").to be_kind_of ParseResult
         end
 
-        it "should return false if input NOT accepted by grammar" do
-          s = "art adj n aux n art n"
-          expect(parser.accepts? s).to be false
+        context "when valid sentence" do
+          before :each do
+            s = "Le chat mange une souris"
+            @result = parser.parse s
+          end
+
+          it "should accept the sentence" do
+            expect(@result).to be_accepted
+          end
+
+          let(:tree) {
+            ParseTree.builder(:S, {
+              NP: {D: 'Le', N: 'chat'},
+              VP: {
+                V: 'mange',
+                NP: {D: 'une', N: 'souris'}
+              }
+            })
+          }
+
+          it "should generate a list of possible parse trees" do
+            expect(@result.parse_trees.size).to eq 1
+            expect(@result.parse_trees.first).to eq tree
+          end
         end
 
-        it "should return false if input has trailing symbols" do
-          s = "art adj n aux v art n glop"
-          expect(parser.accepts? s).to be false
+        context "when invalid sentence" do
+          it "should reject the sentence" do
+            s = "Le chat une souris mange"
+            expect(parser.parse s).to be_rejected
+          end
         end
       end
 

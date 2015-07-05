@@ -26,7 +26,11 @@ module Gramz
             end
 
             success = !@states.final.empty?
-            parse_trees = @states.final.map { |s| ParseTree.new(s.node) }
+            parse_trees = @states.final.map { |s|
+              # Remove the Start symbol at the top of the tree
+              root = s.node.children.first
+              ParseTree.new root
+            }
 
             ParseResult.new success, parse_trees
           end
