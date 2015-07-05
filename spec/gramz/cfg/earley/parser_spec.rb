@@ -20,17 +20,17 @@ module Gramz
 
       describe "#accepts?" do
         it "should return true if input accepted by grammar" do
-          s = [:art, :adj, :n, :aux, :v, :art, :n]
+          s = "art adj n aux v art n"
           expect(parser.accepts? s).to be true
         end
 
         it "should return false if input NOT accepted by grammar" do
-          s = [:art, :adj, :n, :aux, :n, :art, :n]
+          s = "art adj n aux n art n"
           expect(parser.accepts? s).to be false
         end
 
         it "should return false if input has trailing symbols" do
-          s = [:art, :adj, :n, :aux, :v, :art, :n, :too_much]
+          s = "art adj n aux v art n glop"
           expect(parser.accepts? s).to be false
         end
       end

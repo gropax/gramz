@@ -4,6 +4,8 @@ module Gramz
       class Parser
         class State
           attr_reader :rule, :current, :origin
+          attr_accessor :node
+
           def initialize(rule, current, origin)
             @rule, @current, @origin = rule, current, origin
           end
@@ -16,7 +18,7 @@ module Gramz
             @rule.right_symbols[@current]
           end
 
-          def complete?
+          def completed?
             @current == @rule.right_symbols.length
           end
 
