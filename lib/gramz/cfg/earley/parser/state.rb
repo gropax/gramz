@@ -3,15 +3,19 @@ module Gramz
     module Earley
       class Parser
         class State
-          attr_reader :rule, :current, :origin
-          attr_accessor :node
+          attr_reader :rule, :current, :origin, :children
 
-          def initialize(rule, current, origin)
+          def initialize(rule, current, origin, children = [])
             @rule, @current, @origin = rule, current, origin
+            @children = children
           end
 
           def next_state
-            State.new(@rule, @current + 1, @origin)
+            State.new(@rule, @current + 1, @origin, @children.dup)
+          end
+
+          def add_children(state)
+            @children << state
           end
 
           def next_symbol

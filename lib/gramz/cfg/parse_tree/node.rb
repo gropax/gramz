@@ -2,12 +2,9 @@ module Gramz
   module CFG
     class ParseTree
       class Node
-        attr_reader :value, :parent, :children
-        def initialize(value, parent = nil)
-          parent && check_is_a_node!(parent)
-
+        attr_accessor :value, :children
+        def initialize(value)
           @value = value
-          @parent = parent
           @children = []
         end
 

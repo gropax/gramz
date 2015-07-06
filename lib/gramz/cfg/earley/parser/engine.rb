@@ -12,8 +12,6 @@ module Gramz
 
           def parse
             initial_state = State.new(initial_rule, 0, 0)
-            initial_state.node = ParseTree::Node.new(Symbol::Start)
-
             @states.enqueue_at(0, initial_state)
 
             (0..@symbols.length).each do |i|
@@ -26,12 +24,7 @@ module Gramz
             end
 
             success = !@states.final.empty?
-            parse_trees = @states.final.map { |s|
-              # Remove the Start symbol at the top of the tree
-              root = s.node.children.first
-              ParseTree.new root
-            }
-            #binding.pry
+            parse_trees = @states.final.map { |s| build_parse_tree(s) }
 
             ParseResult.new success, parse_trees, @states
           end
@@ -42,9 +35,6 @@ module Gramz
               sym = state.next_symbol
               @grammar.rules_for(sym).each do |r|
                 new_state = State.new(r, 0, j)
-
-                new_state.node = ParseTree::Node.new(sym, state.node)
-
                 @states.enqueue_at(j, new_state)
               end
             end
@@ -53,10 +43,6 @@ module Gramz
               sym = state.next_symbol
               if sym == @symbols[j]
                 new_state = state.next_state
-
-                new_state.node = state.node
-                new_state.node.add_child ParseTree::Node.new(sym)
-
                 @states.enqueue_at(j+1, new_state)
               end
             end
@@ -66,10 +52,7 @@ module Gramz
                 s.next_symbol == state.rule.left_symbol
               }.each { |s|
                 new_state = s.next_state
-
-                new_state.node = state.node.parent.dup
-                new_state.node.add_child(state.node)
-
+                new_state.children << state
                 @states.enqueue_at(j, new_state)
               }
             end
@@ -77,6 +60,29 @@ module Gramz
             def initial_rule
               Rule.new(Symbol::Start, [@grammar.initial_symbol, Symbol::End])
             end
+
+            def build_parse_tree(state)
+              # First remove the Start symbol at the top of the tree
+              root = state.children.first
+              ParseTree.new build_node(root)
+            end
+
+            def build_node(state)
+              node = ParseTree::Node.new(state.rule.left_symbol)
+              children = state.children.dup
+
+              state.rule.right_symbols.each do |sym|
+                child = if sym.terminal?
+                  ParseTree::Node.new(sym)
+                else
+                  build_node(children.shift)
+                end
+                node.children << child
+              end
+
+              node
+            end
+
         end
 
       end
