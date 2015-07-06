@@ -6,11 +6,11 @@ module Gramz::CFG
       include DSL
 
       let(:gram) {
-        grammar :S do
-          rule :S  => [:SN, :V]
-          rule :SN => "Jean"
-          rule :V  => "dort"
-        end
+        grammar(:S) {
+          rule "S  ->  SN V"
+          rule "SN -> 'Jean'"
+          rule "V  ->  dort"
+        }
       }
       let(:formater) { Formater.new(gram) }
 

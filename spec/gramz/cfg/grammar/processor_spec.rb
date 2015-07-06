@@ -5,13 +5,13 @@ module Gramz::CFG
     describe Processor do
       include DSL
 
-      let :original do
-        grammar :S do
-          rule :S  => [:SN, :V]
-          rule :SN => "Jean"
-          rule :V  => "dort"
-        end
-      end
+      let(:original) {
+        grammar(:S) {
+          rule "S  ->  SN V"
+          rule "SN -> 'Jean'"
+          rule "V  ->  dort"
+        }
+      }
 
       let(:processor) { Processor.new(original) }
 
@@ -30,24 +30,24 @@ module Gramz::CFG
 
       describe "#remove_useless_rules" do
         let :original do
-          grammar :S do
-            rule :S  => [:A, 'a']
-            rule :A  => [:A, 'a']
-            rule :A  => 'a'
+          grammar(:S) {
+            rule "S -> A a"
+            rule "A -> A a"
+            rule "A -> a"
             # Symbol X is unreachable
-            rule :X  => 'x'
+            rule "X -> x"
             # Symbol E is unproductive
-            rule :S  => [:E, 'e']
-            rule :E  => [:E, 'e']
-          end
+            rule "S -> E e"
+            rule "E -> E e"
+          }
         end
 
         let :expected do
-          grammar :S do
-            rule :S  => [:A, 'a']
-            rule :A  => [:A, 'a']
-            rule :A  => 'a'
-          end
+          grammar(:S) {
+            rule "S -> A a"
+            rule "A -> A a"
+            rule "A -> a"
+          }
         end
 
         it "should return self" do
@@ -62,20 +62,20 @@ module Gramz::CFG
 
       describe "#remove_unreachable_rules" do
         let :original do
-          grammar :S do
-            rule :S  => [:SN, :V]
-            rule :X  => [:SN, "Bougle"] # Unreachable
-            rule :SN => "Jean"
-            rule :V  => "dort"
-          end
+          grammar(:S) {
+            rule "S  -> SN V"
+            rule "X  -> SN 'Bougle'" # Unreachable
+            rule "SN -> 'Jean'"
+            rule "V  ->  dort"
+          }
         end
 
         let :expected do
-          grammar :S do
-            rule :S  => [:SN, :V]
-            rule :SN => "Jean"
-            rule :V  => "dort"
-          end
+          grammar(:S) {
+            rule "S  ->  SN V"
+            rule "SN -> 'Jean'"
+            rule "V  ->  dort"
+          }
         end
 
         it "should return self" do
@@ -90,22 +90,22 @@ module Gramz::CFG
 
       describe "#remove_unproductive_rules" do
         let :original do
-          grammar :S do
-            rule :S  => [:A, 'a']
-            rule :A  => [:A, 'a']
-            rule :A  => 'a'
+          grammar(:S) {
+            rule "S -> A a"
+            rule "A -> A a"
+            rule "A -> a"
             # Symbol E is unproductive
-            rule :S  => [:E, 'e']
-            rule :E  => [:E, 'e']
-          end
+            rule "S -> E e"
+            rule "E -> E e"
+          }
         end
 
         let :expected do
-          grammar :S do
-            rule :S  => [:A, 'a']
-            rule :A  => [:A, 'a']
-            rule :A  => 'a'
-          end
+          grammar(:S) {
+            rule "S -> A a"
+            rule "A -> A a"
+            rule "A -> a"
+          }
         end
 
         it "should return self" do
@@ -120,19 +120,19 @@ module Gramz::CFG
 
       describe "#remove_epsilon_rules" do
         let :original do
-          grammar :S do
-            rule :S  => [:A, 'a']
-            rule :A  => [:A, 'a']
-            rule :A  => 'a'
-          end
+          grammar(:S) {
+            rule "S -> A a"
+            rule "A -> A a"
+            rule "A -> a"
+          }
         end
 
         let :expected do
-          grammar :S do
-            rule :S  => [:A, 'a']
-            rule :A  => [:A, 'a']
-            rule :A  => 'a'
-          end
+          grammar(:S) {
+            rule "S -> A a"
+            rule "A -> A a"
+            rule "A -> a"
+          }
         end
 
         it "should return self" do

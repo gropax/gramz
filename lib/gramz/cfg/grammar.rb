@@ -1,4 +1,3 @@
-require_relative 'grammar/dsl'
 require_relative 'grammar/formater'
 require_relative 'grammar/processor'
 

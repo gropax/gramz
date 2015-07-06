@@ -5,11 +5,11 @@ module Gramz::CFG
     include DSL
 
     let(:gram) {
-      grammar :S do
-        rule :S  => [:SN, :V]
-        rule :SN => "Jean"
-        rule :V  => "dort"
-      end
+      grammar(:S) {
+        rule "S  ->  SN V"
+        rule "SN -> 'Jean'"
+        rule "V  ->  dort"
+      }
     }
 
     describe "#non_terms" do
@@ -26,20 +26,20 @@ module Gramz::CFG
 
     describe "#==" do
       it "should return true if grammars have same rules whatever their order" do
-        other = grammar :S do
-          rule :S  => [:SN, :V]
-          rule :V  => "dort"
-          rule :SN => "Jean"
-        end
+        other = grammar(:S) {
+          rule "S  ->  SN V"
+          rule "V  ->  dort"
+          rule "SN -> 'Jean'"
+        }
         expect(gram == other).to be true
       end
 
       it "should return false if grammars have different rules" do
-        other = grammar :S do
-          rule :S  => [:V, :SN]
-          rule :V  => "dort"
-          rule :SN => "Jean"
-        end
+        other = grammar(:S) {
+          rule "S  ->  V SN"
+          rule "V  ->  dort"
+          rule "SN -> 'Jean'"
+        }
         expect(gram == other).to be false
       end
     end

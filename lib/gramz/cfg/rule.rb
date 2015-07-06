@@ -1,3 +1,6 @@
+require_relative 'rule/alternative'
+require_relative 'rule/meta_symbols'
+
 module Gramz
   module CFG
     class Rule
@@ -7,14 +10,9 @@ module Gramz
 
       attr_reader :left_symbol, :right_symbols
 
-      def initialize(lh_sym, rh_syms = [])
-        left_symbol = Symbol(lh_sym)
-        right_symbols = rh_syms.map { |s| Symbol(s) }
-
-        check_left_symbol_is_non_terminal! left_symbol
-
-        @left_symbol = left_symbol
-        @right_symbols = right_symbols
+      def initialize(lsym, rsyms = [])
+        @left_symbol = lsym
+        @right_symbols = rsyms
       end
 
       def symbols

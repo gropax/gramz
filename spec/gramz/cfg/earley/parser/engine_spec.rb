@@ -6,14 +6,14 @@ module Gramz::CFG
       include DSL
 
       let(:my_grammar) {
-        grammar :S do
-          rule :S  => [:NP, :VP]
-          rule :NP => ['art', 'adj', 'n']
-          rule :NP => ['art', 'n']
-          rule :NP => ['adj', 'n']
-          rule :VP => ['aux', :VP]
-          rule :VP => ['v', :NP]
-        end
+        grammar(:S) {
+          rule "S  -> NP VP"
+          rule "NP -> art adj n"
+          rule "NP -> art n"
+          rule "NP -> adj n"
+          rule "VP -> aux VP"
+          rule "VP -> v NP"
+        }
       }
 
       let(:input) { Lexer.new.lex(input_str) }

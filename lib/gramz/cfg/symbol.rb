@@ -2,7 +2,7 @@ module Gramz
   module CFG
     module Symbol
       class Base
-        attr_reader :internal
+        attr_reader :value, :internal
         def initialize(value)
           @value = value
           @internal = value.to_s.upcase.to_sym

@@ -3,20 +3,20 @@ require 'spec_helper'
 module Gramz
   module CFG
     describe Earley::Parser do
-      include CFG::DSL
+      include DSL
 
       let(:my_grammar) {
-        grammar :S do
-          rule :S  => [:NP, :VP]
-          rule :NP => [:D, :N]
-          rule :D  => 'Le'
-          rule :D  => 'une'
-          rule :N  => 'chat'
-          rule :N  => 'souris'
-          rule :VP => :V
-          rule :VP => [:V, :NP]
-          rule :V  => 'mange'
-        end
+        grammar(:S) {
+          rule "S  -> NP VP"
+          rule "NP -> D N"
+          rule "D  -> le"
+          rule "D  -> une"
+          rule "N  -> chat"
+          rule "N  -> souris"
+          rule "VP -> V"
+          rule "VP -> V NP"
+          rule "V  -> mange"
+        }
       }
 
       let(:parser) { Earley::Parser.new(my_grammar) }
