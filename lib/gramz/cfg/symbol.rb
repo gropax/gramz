@@ -2,26 +2,27 @@ module Gramz
   module CFG
     module Symbol
       class Base
-        attr_reader :symbol
-        def initialize(sym)
-          @symbol = sym.to_sym
+        attr_reader :internal
+        def initialize(value)
+          @value = value
+          @internal = value.to_s.upcase.to_sym
         end
 
         def eql?(other)
-          terminal? == other.terminal? && @symbol.eql?(other.symbol)
+          terminal? == other.terminal? && @internal.eql?(other.internal)
         end
         alias_method :==, :eql?
 
         def hash
-          [@symbol, terminal?].hash
+          [@internal, terminal?].hash
         end
 
         def to_sym
-          @symbol.to_sym
+          @internal.to_sym
         end
 
         def to_s
-          @symbol.to_s
+          @value.to_s
         end
 
         def non_terminal?

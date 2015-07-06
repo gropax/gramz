@@ -64,18 +64,18 @@ module Gramz
             def build_parse_tree(state)
               # First remove the Start symbol at the top of the tree
               root = state.children.first
-              ParseTree.new build_node(root)
+              ParseTree.new build_node(root, @symbols.dup)
             end
 
-            def build_node(state)
+            def build_node(state, symbols)
               node = ParseTree::Node.new(state.rule.left_symbol)
               children = state.children.dup
 
               state.rule.right_symbols.each do |sym|
                 child = if sym.terminal?
-                  ParseTree::Node.new(sym)
+                  ParseTree::Node.new symbols.shift
                 else
-                  build_node(children.shift)
+                  build_node(children.shift, symbols)
                 end
                 node.children << child
               end

@@ -20,7 +20,7 @@ module Gramz::CFG
 
     describe "#terms" do
       it "should return the terminal symbols used in rules" do
-        expect(gram.terms.map(&:to_sym)).to match_array [:Jean, :dort]
+        expect(gram.terms.map(&:to_sym)).to match_array [:JEAN, :DORT]
       end
     end
 
