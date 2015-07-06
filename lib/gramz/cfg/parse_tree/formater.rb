@@ -12,7 +12,11 @@ module Gramz
         end
 
         def format
-          node_block(@parse_tree.root).to_s
+          text_block.to_s
+        end
+
+        def text_block
+          node_block(@parse_tree.root)
         end
 
         def node_block(node)

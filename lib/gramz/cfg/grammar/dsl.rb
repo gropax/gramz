@@ -11,7 +11,13 @@ module Gramz
     #
     module DSL
       def grammar(initial, &blk)
-        GrammarBuilder.new(initial, &blk).build
+        gram = GrammarBuilder.new(initial, &blk).build
+        if ENV["GRAMZ"]
+          # Store grammar if global var if run from gramz cli
+          $gramz_grammar = gram
+        else
+          gram
+        end
       end
 
       class GrammarBuilder

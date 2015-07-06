@@ -1,0 +1,71 @@
+#!/usr/bin/env ruby
+
+lib = File.expand_path(File.dirname(__FILE__) + '/../lib')
+$LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
+
+require 'rubygems'
+require 'commander/import'
+require 'gramz'
+
+ENV['GRAMZ'] = 'true'
+
+program :version, '0.0.1'
+program :description, 'Parse sentences using grammars'
+
+command :run do |c|
+  c.syntax = 'gramz run [file]'
+  c.description = 'Parses sentences against grammar defined in file'
+  c.action do |args, options|
+    unless file = args.first
+      $stderr.puts "Filename expected"
+      exit 1
+    end
+
+    require args.first
+
+    $grammar = $gramz_grammar
+    $parser = Gramz::CFG::Earley::Parser.new($grammar)
+
+    ask_action
+  end
+end
+
+def ask_action
+  case ans = ask(">>> ")
+  when "grammar"
+    print $gramz_grammar.format
+  when "parse"
+    parse_sentence
+  else
+    puts "Unknow action: #{ans}"
+    ask_action
+  end
+end
+
+def parse_sentence
+  loop do
+    case ans = ask("parse >>> ")
+    when "quit" then break
+    when "@trees"
+      if @last_parse
+        puts @last_parse.parse_trees.map(&:format).join("\n")
+      else
+        puts "No parses yet."
+      end
+    when "@states"
+      if @last_parse
+        puts @last_parse.states.inspect
+      else
+        puts "No parses yet."
+      end
+    else
+      result = $parser.parse(ans)
+      if result.accepted?
+        puts "accepted\n"
+        @last_parse = result
+      else
+        puts "rejected"
+      end
+    end
+  end
+end

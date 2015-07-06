@@ -13,6 +13,7 @@ module Gramz
           rule :D  => 'une'
           rule :N  => 'chat'
           rule :N  => 'souris'
+          rule :VP => :V
           rule :VP => [:V, :NP]
           rule :V  => 'mange'
         end

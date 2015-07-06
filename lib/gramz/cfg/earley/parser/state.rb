@@ -25,6 +25,7 @@ module Gramz
           def ==(other)
             @rule == other.rule && @current == other.current && @origin == other.origin
           end
+          alias_method :eql?, :==
 
           def hash
             [@rule, @current, @origin].hash

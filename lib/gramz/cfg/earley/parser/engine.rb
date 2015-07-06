@@ -31,8 +31,9 @@ module Gramz
               root = s.node.children.first
               ParseTree.new root
             }
+            #binding.pry
 
-            ParseResult.new success, parse_trees
+            ParseResult.new success, parse_trees, @states
           end
 
           private
