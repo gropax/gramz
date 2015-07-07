@@ -6,11 +6,33 @@ module Gramz
         def initialize(sym)
           @symbol = sym
         end
+
+        def terminal?
+          @symbol.terminal?
+        end
+
+        def non_terminal?
+          @symbol.non_terminal?
+        end
       end
 
-      KleeneStar = Class.new MetaSymbol
-      KleenePlus = Class.new MetaSymbol
-      Optional   = Class.new MetaSymbol
+      class KleeneStar < MetaSymbol
+        def to_s
+          "#{@symbol}*"
+        end
+      end
+
+      class KleenePlus < MetaSymbol
+        def to_s
+          "#{@symbol}+"
+        end
+      end
+
+      class Optional < MetaSymbol
+        def to_s
+          "(#{@symbol})"
+        end
+      end
     end
   end
 end

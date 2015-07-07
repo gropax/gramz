@@ -42,6 +42,8 @@ module Gramz
         end
       end
 
+      Epsilon = Terminal.new(:"ε")
+
       Start = NonTerminal.new(:"0")
       def Start.inspect
         "#<CFG::Symbol::Start>"

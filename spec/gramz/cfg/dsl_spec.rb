@@ -27,6 +27,16 @@ module Gramz::CFG
         end
       end
 
+      describe "epsilon symbol" do
+        let(:gram) {
+          grammar(:S) { rule "S -> A eps B" }
+        }
+        it "should detect epsilon symbol" do
+          rside = rule.right_symbols
+          expect(rside[1]).to be Symbol::Epsilon
+        end
+      end
+
       describe "| meta symbol" do
         let(:gram) {
           grammar(:S) { rule "S -> A 'Jean' | chien Pro" }

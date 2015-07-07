@@ -118,6 +118,82 @@ module Gramz::CFG
         end
       end
 
+      describe "#expand_meta_symbols" do
+        describe "| meta symbol" do
+          let(:original) { grammar(:S) { rule "S -> A | B" } }
+          let(:expected) { grammar(:S) { rule "S -> A"; rule "S -> B" } }
+
+          it "should return self" do
+            expect(processor.expand_meta_symbols).to be processor
+          end
+
+          it "should separate original into multiple simple rules" do
+            gram = processor.expand_meta_symbols.result
+            expect(gram).to eq expected
+          end
+        end
+
+        describe "* meta symbol" do
+          let(:original) { grammar(:S) { rule "S -> A B* C" } }
+          let(:expected) {
+            grammar(:S) {
+              rule "S       -> A _B_STAR C"
+              rule "_B_STAR -> B _B_STAR"
+              rule "_B_STAR -> eps"
+            }
+          }
+
+          it "should return self" do
+            expect(processor.expand_meta_symbols).to be processor
+          end
+
+          it "should separate original into multiple simple rules" do
+            gram = processor.expand_meta_symbols.result
+            expect(gram).to eq expected
+          end
+        end
+
+        describe "+ meta symbol" do
+          let(:original) { grammar(:S) { rule "S -> A B+ C" } }
+          let(:expected) {
+            grammar(:S) {
+              rule "S       -> A _B_PLUS C"
+              rule "_B_PLUS -> B _B_PLUS"
+              rule "_B_PLUS -> B"
+            }
+          }
+
+          it "should return self" do
+            expect(processor.expand_meta_symbols).to be processor
+          end
+
+          it "should separate original into multiple simple rules" do
+            gram = processor.expand_meta_symbols.result
+            expect(gram).to eq expected
+          end
+        end
+
+        describe "() meta symbol" do
+          let(:original) { grammar(:S) { rule "S -> A (B) C" } }
+          let(:expected) {
+            grammar(:S) {
+              rule "S       -> A _B_OPT C"
+              rule "_B_OPT -> B"
+              rule "_B_OPT -> eps"
+            }
+          }
+
+          it "should return self" do
+            expect(processor.expand_meta_symbols).to be processor
+          end
+
+          it "should separate original into multiple simple rules" do
+            gram = processor.expand_meta_symbols.result
+            expect(gram).to eq expected
+          end
+        end
+      end
+
       describe "#remove_epsilon_rules" do
         let :original do
           grammar(:S) {

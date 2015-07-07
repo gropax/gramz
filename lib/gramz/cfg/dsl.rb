@@ -60,13 +60,15 @@ module Gramz
 
         def build_symbol(str)
           case str
+          when 'eps'
+            Symbol::Epsilon
           when /^(\w+)\*$/
             Rule::KleeneStar.new build_symbol $1
           when /^(\w+)\+$/
             Rule::KleenePlus.new build_symbol $1
           when /^\((\w+)\)$/
             Rule::Optional.new build_symbol $1
-          when /^[A-Z]/
+          when /^_?[A-Z]/
             Symbol::NonTerminal.new str.to_sym
           when /^'(\w+)'$/, /^([a-z]+)$/
             Symbol::Terminal.new $1.to_sym
