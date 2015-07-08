@@ -193,33 +193,6 @@ module Gramz::CFG
           end
         end
       end
-
-      describe "#remove_epsilon_rules" do
-        let :original do
-          grammar(:S) {
-            rule "S -> A a"
-            rule "A -> A a"
-            rule "A -> a"
-          }
-        end
-
-        let :expected do
-          grammar(:S) {
-            rule "S -> A a"
-            rule "A -> A a"
-            rule "A -> a"
-          }
-        end
-
-        it "should return self" do
-          expect(processor.remove_epsilon_rules).to be processor
-        end
-
-        it "should remove unreachable rules from processed grammar" do
-          gram = processor.remove_epsilon_rules.result
-          expect(gram).to eq expected
-        end
-      end
     end
   end
 end

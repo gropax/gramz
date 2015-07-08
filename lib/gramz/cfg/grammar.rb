@@ -1,5 +1,6 @@
 require_relative 'grammar/formater'
 require_relative 'grammar/processor'
+require_relative 'grammar/epsilon_rules_processor'
 
 module Gramz
   module CFG

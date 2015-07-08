@@ -19,6 +19,10 @@ module Gramz
         [@left_symbol, *@right_symbols]
       end
 
+      def epsilon_rule?
+        @right_symbols == [Symbol::Epsilon]
+      end
+
       def ==(other)
         @left_symbol == other.left_symbol &&
           @right_symbols == other.right_symbols
