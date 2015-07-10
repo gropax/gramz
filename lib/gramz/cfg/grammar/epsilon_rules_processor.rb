@@ -1,10 +1,12 @@
 module Gramz
   module CFG
     class Grammar
-      class EpsilonRulesProcessor
-        attr_reader :result
-        def initialize(grammar)
-          @original = grammar
+      class EpsilonRulesProcessor < Processor
+        process :remove_epsilon_rules
+        condition :has_epsilon_rules?
+
+        def has_epsilon_rules?
+          !nullable_symbols.empty?
         end
 
         def remove_epsilon_rules
@@ -37,16 +39,8 @@ module Gramz
 
           }.flatten
 
-          @result = Grammar.new(new_i, added + modified)
-
-          self
+          Grammar.new(new_i, added + modified)
         end
-        alias_method :process, :remove_epsilon_rules
-
-        def has_epsilon_rules?
-          !nullable_symbols.empty?
-        end
-        alias_method :effective?, :has_epsilon_rules?
 
         def nullable_symbols
           @nullable_symbols ||= compute_nullable_symbols

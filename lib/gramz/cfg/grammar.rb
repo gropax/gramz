@@ -1,5 +1,10 @@
 require_relative 'grammar/formater'
 require_relative 'grammar/processor'
+require_relative 'grammar/composite_processor'
+require_relative 'grammar/meta_symbols_processor'
+require_relative 'grammar/unreachable_rules_processor'
+require_relative 'grammar/unproductive_rules_processor'
+require_relative 'grammar/useless_rules_processor'
 require_relative 'grammar/epsilon_rules_processor'
 
 module Gramz

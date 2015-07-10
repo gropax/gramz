@@ -54,12 +54,8 @@ module Gramz::CFG
       end
 
       describe "#remove_epsilon_rules" do
-        it "should return self" do
-          expect(processor.remove_epsilon_rules).to be processor
-        end
-
         it "should remove epsilon rules from processed grammar" do
-          gram = processor.remove_epsilon_rules.result
+          gram = processor.remove_epsilon_rules
           expect(gram).to eq without_eps
         end
 
@@ -80,7 +76,7 @@ module Gramz::CFG
           }
 
           it "should create a new initial symbol" do
-            gram = processor.remove_epsilon_rules.result
+            gram = processor.remove_epsilon_rules
             expect(gram).to eq without_eps
           end
         end
